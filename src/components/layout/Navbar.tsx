@@ -13,10 +13,21 @@ import {
 
 interface NavbarProps {
   left?: React.ReactNode
+  username?: string
   onLogout: () => void
 }
 
-export function Navbar({ left, onLogout }: NavbarProps) {
+function getInitials(name?: string): string {
+  if (!name) return ""
+  const trimmed = name.trim()
+  if (!trimmed) return ""
+  const parts = trimmed.split(/\s+/)
+  const first = parts[0]?.[0]?.toUpperCase() ?? ""
+  const last = parts.length > 1 ? parts[parts.length - 1]?.[0]?.toUpperCase() ?? "" : ""
+  return (first + last) || first
+}
+
+export function Navbar({ left, username, onLogout }: NavbarProps) {
   return (
     <div className="flex h-14 items-center gap-3 px-3 md:px-6">
       {left}
@@ -36,13 +47,24 @@ export function Navbar({ left, onLogout }: NavbarProps) {
             <Button variant="ghost" size="icon" className="rounded-full" aria-label="Account menu">
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="text-xs">
-                  <User className="h-4 w-4" />
+                  {getInitials(username) ? getInitials(username) : <User className="h-4 w-4" />}
                 </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-52">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              <div className="flex flex-col">
+                <span className="font-medium text-foreground">
+                  {username ? `@${username}` : "My Account"}
+                </span>
+                {username && (
+                  <span className="text-[11px] font-normal text-muted-foreground">
+                    Signed in
+                  </span>
+                )}
+              </div>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={() => {}}>
               <User className="mr-2 h-4 w-4" /> Profile

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -7,12 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
-import { Sparkles, Lock, Mail, Eye, EyeOff } from "lucide-react"
+import { Sparkles, Lock, User as UserIcon, Eye, EyeOff } from "lucide-react"
 import { loginSchema, type LoginInput } from "@/schemas"
+import { login as authLogin } from "@/lib/auth"
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const [form, setForm] = useState<LoginInput>({ email: "", password: "" })
+  const [form, setForm] = useState<LoginInput>({ username: "", password: "" })
   const [errors, setErrors] = useState<Partial<Record<keyof LoginInput, string>>>({})
   const [showPwd, setShowPwd] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -34,12 +35,28 @@ export function LoginPage() {
       setErrors(fieldErrors)
       return
     }
+
     setLoading(true)
-    toast.info("Phase 3: Auth", {
-      description: "Login flow will connect to Supabase Auth in Phase 3.",
-    })
-    await new Promise((r) => setTimeout(r, 300))
+    await new Promise((r) => setTimeout(r, 250))
+
+    const result = authLogin(form.username.trim(), form.password)
     setLoading(false)
+
+    if (!result.ok) {
+      toast.error("Sign in failed", {
+        description: result.error ?? "Invalid credentials",
+      })
+      if (result.error === "Invalid username") {
+        setErrors({ username: result.error })
+      } else {
+        setErrors({ password: result.error })
+      }
+      return
+    }
+
+    toast.success(`Welcome, ${form.username}!`, {
+      description: "Signed in successfully.",
+    })
     navigate("/dashboard", { replace: true })
   }
 
@@ -68,32 +85,27 @@ export function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="flex items-center gap-1 text-xs">
-                  <Mail className="h-3 w-3" /> Email
+                <Label htmlFor="username" className="flex items-center gap-1 text-xs">
+                  <UserIcon className="h-3 w-3" /> Username
                 </Label>
                 <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@business.in"
-                  value={form.email}
-                  onChange={(e) => update("email", e.target.value)}
-                  aria-invalid={Boolean(errors.email)}
+                  id="username"
+                  type="text"
+                  autoComplete="username"
+                  placeholder="Enter your username"
+                  value={form.username}
+                  onChange={(e) => update("username", e.target.value)}
+                  aria-invalid={Boolean(errors.username)}
                 />
-                {errors.email && (
-                  <p className="text-xs text-destructive">{errors.email}</p>
+                {errors.username && (
+                  <p className="text-xs text-destructive">{errors.username}</p>
                 )}
               </div>
 
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="flex items-center gap-1 text-xs">
-                    <Lock className="h-3 w-3" /> Password
-                  </Label>
-                  <Link to="/forgot" className="text-[11px] text-muted-foreground hover:text-foreground">
-                    Forgot?
-                  </Link>
-                </div>
+                <Label htmlFor="password" className="flex items-center gap-1 text-xs">
+                  <Lock className="h-3 w-3" /> Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -126,15 +138,18 @@ export function LoginPage() {
             <Separator className="my-6" />
 
             <div className="rounded-md border border-dashed bg-muted/20 p-3 text-center text-[11px] text-muted-foreground">
-              <Badge variant="outline" className="mb-1.5">Phase 3 preview</Badge>
-              <div>Email/Password auth via Supabase Auth + Protected routes.</div>
-              <div>Demo sign-in bypasses credentials and opens the dashboard.</div>
+              <Badge variant="outline" className="mb-1.5">Demo credentials</Badge>
+              <div>
+                Username: <span className="font-mono font-medium text-foreground">teja</span>
+                {" · "}
+                Password: <span className="font-mono font-medium text-foreground">teja</span>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          © {new Date().getFullYear()} Saree Ledger · Build #0.1.0 · Phase 1
+          © {new Date().getFullYear()} Saree Ledger · Build #0.1.0
         </p>
       </div>
     </div>

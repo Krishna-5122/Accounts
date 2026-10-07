@@ -23,8 +23,8 @@ export const paymentSchema = z.object({
 })
 
 export const loginSchema = z.object({
-  email: z.string().email("Enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  username: z.string().min(2, "Username must be at least 2 characters"),
+  password: z.string().min(4, "Password must be at least 4 characters"),
 })
 
 export type SaleInput = z.infer<typeof saleSchema>

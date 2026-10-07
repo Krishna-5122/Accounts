@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom"
 import { AppShell } from "@/components/layout/AppShell"
 import { lazy, Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { isAuthenticated } from "@/lib/auth"
 
 const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })))
 const CustomersPage = lazy(() => import("@/pages/CustomersPage").then((m) => ({ default: m.CustomersPage })))
@@ -28,8 +29,7 @@ function PageLoader() {
 }
 
 function ProtectedElement({ children }: { children: React.ReactNode }) {
-  const isAuthenticated = true
-  if (!isAuthenticated) {
+  if (!isAuthenticated()) {
     return <Navigate to="/login" replace />
   }
   return <>{children}</>
@@ -126,6 +126,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to={isAuthenticated() ? "/dashboard" : "/login"} replace />,
   },
 ])

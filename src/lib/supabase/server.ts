@@ -1,7 +1,18 @@
 import { createServerClient as sbCreateServerClient, type CookieMethodsServer } from "@supabase/ssr"
 import { SUPABASE_URL, SUPABASE_JWKS_URL } from "./constants"
 
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SECRET_KEY
+function getServiceRoleKey(): string | undefined {
+  try {
+    if (typeof process !== "undefined" && process.env) {
+      return process.env.SUPABASE_SECRET_KEY
+    }
+  } catch {
+    return undefined
+  }
+  return undefined
+}
+
+const SUPABASE_SERVICE_ROLE_KEY = getServiceRoleKey()
 
 export function createServerClient(cookies: CookieMethodsServer) {
   if (!SUPABASE_URL) {

@@ -5,13 +5,18 @@ import { Navbar } from "./Navbar"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { logout as authLogout, getAuthSession } from "@/lib/auth"
+import { toast } from "sonner"
 
 export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const session = getAuthSession()
 
-  async function handleLogout() {
+  function handleLogout() {
+    authLogout()
+    toast.info("Signed out", { description: "You have been signed out successfully." })
     navigate("/login", { replace: true })
     setMobileOpen(false)
   }
@@ -41,6 +46,7 @@ export function AppShell() {
                   </Button>
                 </SheetTrigger>
               }
+              username={session?.username}
               onLogout={handleLogout}
             />
           </header>
