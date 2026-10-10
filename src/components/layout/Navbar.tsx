@@ -23,8 +23,8 @@ function getInitials(name?: string): string {
   if (!trimmed) return ""
   const parts = trimmed.split(/\s+/)
   const first = parts[0]?.[0]?.toUpperCase() ?? ""
-  const last = parts.length > 1 ? parts[parts.length - 1]?.[0]?.toUpperCase() ?? "" : ""
-  return (first + last) || first
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0]?.toUpperCase() ?? "") : ""
+  return first + last || first
 }
 
 export function Navbar({ left, username, onLogout }: NavbarProps) {
@@ -32,11 +32,11 @@ export function Navbar({ left, username, onLogout }: NavbarProps) {
     <div className="flex h-14 items-center gap-3 px-3 md:px-6">
       {left}
 
-      <div className="relative flex-1 max-w-md">
+      <div className="relative max-w-md flex-1">
         <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search customers, bills, payments…"
-          className="h-9 pl-9 w-full bg-muted/40"
+          className="h-9 w-full bg-muted/40 pl-9"
           aria-label="Global search"
         />
       </div>
@@ -59,9 +59,7 @@ export function Navbar({ left, username, onLogout }: NavbarProps) {
                   {username ? `@${username}` : "My Account"}
                 </span>
                 {username && (
-                  <span className="text-[11px] font-normal text-muted-foreground">
-                    Signed in
-                  </span>
+                  <span className="text-[11px] font-normal text-muted-foreground">Signed in</span>
                 )}
               </div>
             </DropdownMenuLabel>

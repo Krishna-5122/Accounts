@@ -5,9 +5,7 @@ let singletonClient: ReturnType<typeof createBrowserClient> | undefined
 
 export function createClient() {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error(
-      "Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY environment variables.",
-    )
+    throw new Error("Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY environment variables.")
   }
 
   if (!singletonClient) {

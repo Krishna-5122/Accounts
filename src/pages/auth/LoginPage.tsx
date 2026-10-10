@@ -97,9 +97,7 @@ export function LoginPage() {
                   onChange={(e) => update("username", e.target.value)}
                   aria-invalid={Boolean(errors.username)}
                 />
-                {errors.username && (
-                  <p className="text-xs text-destructive">{errors.username}</p>
-                )}
+                {errors.username && <p className="text-xs text-destructive">{errors.username}</p>}
               </div>
 
               <div className="space-y-1.5">
@@ -125,9 +123,7 @@ export function LoginPage() {
                     {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                {errors.password && (
-                  <p className="text-xs text-destructive">{errors.password}</p>
-                )}
+                {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
@@ -138,7 +134,9 @@ export function LoginPage() {
             <Separator className="my-6" />
 
             <div className="rounded-md border border-dashed bg-muted/20 p-3 text-center text-[11px] text-muted-foreground">
-              <Badge variant="outline" className="mb-1.5">Demo credentials</Badge>
+              <Badge variant="outline" className="mb-1.5">
+                Demo credentials
+              </Badge>
               <div>
                 Username: <span className="font-mono font-medium text-foreground">teja</span>
                 {" · "}

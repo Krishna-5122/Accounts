@@ -2,9 +2,7 @@ import { z } from "zod"
 
 export const envSchema = z.object({
   VITE_SUPABASE_URL: z.string().url("VITE_SUPABASE_URL must be a valid URL"),
-  VITE_SUPABASE_ANON_KEY: z
-    .string()
-    .min(1, "VITE_SUPABASE_ANON_KEY must be set in .env.local"),
+  VITE_SUPABASE_ANON_KEY: z.string().min(1, "VITE_SUPABASE_ANON_KEY must be set in .env.local"),
 })
 
 export const customerSchema = z.object({

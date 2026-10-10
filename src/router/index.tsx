@@ -4,15 +4,40 @@ import { lazy, Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { isAuthenticated } from "@/lib/auth"
 
-const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })))
-const CustomersPage = lazy(() => import("@/pages/CustomersPage").then((m) => ({ default: m.CustomersPage })))
-const CustomerDetailPage = lazy(() => import("@/pages/CustomerDetailPage").then((m) => ({ default: m.CustomerDetailPage })))
+const DashboardPage = lazy(() =>
+  import("@/pages/DashboardPage").then((m) => ({ default: m.DashboardPage })),
+)
+const CustomersPage = lazy(() =>
+  import("@/pages/CustomersPage").then((m) => ({ default: m.CustomersPage })),
+)
+const NewCustomerPage = lazy(() =>
+  import("@/pages/NewCustomerPage").then((m) => ({ default: m.NewCustomerPage })),
+)
+const CustomerDetailPage = lazy(() =>
+  import("@/pages/CustomerDetailPage").then((m) => ({ default: m.CustomerDetailPage })),
+)
 const SalesPage = lazy(() => import("@/pages/SalesPage").then((m) => ({ default: m.SalesPage })))
-const PaymentsPage = lazy(() => import("@/pages/PaymentsPage").then((m) => ({ default: m.PaymentsPage })))
-const OutstandingPage = lazy(() => import("@/pages/OutstandingPage").then((m) => ({ default: m.OutstandingPage })))
-const ReportsPage = lazy(() => import("@/pages/ReportsPage").then((m) => ({ default: m.ReportsPage })))
-const SettingsPage = lazy(() => import("@/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })))
-const LoginPage = lazy(() => import("@/pages/auth/LoginPage").then((m) => ({ default: m.LoginPage })))
+const NewSalePage = lazy(() =>
+  import("@/pages/NewSalePage").then((m) => ({ default: m.NewSalePage })),
+)
+const PaymentsPage = lazy(() =>
+  import("@/pages/PaymentsPage").then((m) => ({ default: m.PaymentsPage })),
+)
+const NewPaymentPage = lazy(() =>
+  import("@/pages/NewPaymentPage").then((m) => ({ default: m.NewPaymentPage })),
+)
+const OutstandingPage = lazy(() =>
+  import("@/pages/OutstandingPage").then((m) => ({ default: m.OutstandingPage })),
+)
+const ReportsPage = lazy(() =>
+  import("@/pages/ReportsPage").then((m) => ({ default: m.ReportsPage })),
+)
+const SettingsPage = lazy(() =>
+  import("@/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })),
+)
+const LoginPage = lazy(() =>
+  import("@/pages/auth/LoginPage").then((m) => ({ default: m.LoginPage })),
+)
 
 function PageLoader() {
   return (
@@ -73,6 +98,14 @@ export const router = createBrowserRouter([
             ),
           },
           {
+            path: "new",
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <NewCustomerPage />
+              </Suspense>
+            ),
+          },
+          {
             path: ":customerId",
             element: (
               <Suspense fallback={<PageLoader />}>
@@ -84,19 +117,45 @@ export const router = createBrowserRouter([
       },
       {
         path: "sales",
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <SalesPage />
-          </Suspense>
-        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <SalesPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: "new",
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <NewSalePage />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: "payments",
-        element: (
-          <Suspense fallback={<PageLoader />}>
-            <PaymentsPage />
-          </Suspense>
-        ),
+        children: [
+          {
+            index: true,
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <PaymentsPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: "new",
+            element: (
+              <Suspense fallback={<PageLoader />}>
+                <NewPaymentPage />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: "outstanding",
